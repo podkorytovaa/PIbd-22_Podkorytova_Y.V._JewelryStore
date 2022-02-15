@@ -52,7 +52,7 @@ namespace JewelryStoreListImplement.Implements
             }
             foreach (var warehouse in source.Warehouses)
             {
-                if (warehouse.Id == model.Id)
+                if (warehouse.Id == model.Id || warehouse.WarehouseName == model.WarehouseName)
                 {
                     return CreateModel(warehouse);
                 }
