@@ -1,7 +1,7 @@
 using JewelryStoreBusinessLogic.BusinessLogics;
 using JewelryStoreContracts.BusinessLogicsContracts;
 using JewelryStoreContracts.StoragesContracts;
-using JewelryStoreListImplement.Implements;
+using JewelryStoreFileImplement.Implements;
 using System;
 using System.Windows.Forms;
 using Unity;
