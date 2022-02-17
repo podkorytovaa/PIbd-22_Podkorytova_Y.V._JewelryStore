@@ -34,11 +34,11 @@ namespace JewelryStoreFileImplement
             return instance;
         }
 
-        ~FileDataListSingleton()
+        public static void Save()
         {
-            SaveComponents();
-            SaveOrders();
-            SaveJewels();
+            instance.SaveComponents();
+            instance.SaveOrders();
+            instance.SaveJewels();
         }
 
         private List<Component> LoadComponents()

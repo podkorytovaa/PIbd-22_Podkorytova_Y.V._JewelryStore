@@ -2,6 +2,7 @@ using JewelryStoreBusinessLogic.BusinessLogics;
 using JewelryStoreContracts.BusinessLogicsContracts;
 using JewelryStoreContracts.StoragesContracts;
 using JewelryStoreFileImplement.Implements;
+using JewelryStoreFileImplement;
 using System;
 using System.Windows.Forms;
 using Unity;
@@ -33,6 +34,7 @@ namespace JewelryStoreView
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(Container.Resolve<FormMain>());
+            FileDataListSingleton.Save();
         }
 
         private static IUnityContainer BuildUnityContainer()
