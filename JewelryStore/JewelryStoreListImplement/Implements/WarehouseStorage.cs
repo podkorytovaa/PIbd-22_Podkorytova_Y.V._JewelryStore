@@ -121,8 +121,7 @@ namespace JewelryStoreListImplement.Implements
             {
                 if (warehouse.WarehouseComponents.ContainsKey(component.Key))
                 {
-                    warehouse.WarehouseComponents[component.Key] =
-                        model.WarehouseComponents[component.Key].Item2;
+                    warehouse.WarehouseComponents[component.Key] = model.WarehouseComponents[component.Key].Item2;
                 }
                 else
                 {
