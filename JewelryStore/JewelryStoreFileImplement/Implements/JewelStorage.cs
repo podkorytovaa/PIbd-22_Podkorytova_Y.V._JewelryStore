@@ -43,8 +43,7 @@ namespace JewelryStoreFileImplement.Implements
 
         public void Insert(JewelBindingModel model)
         {
-            int maxId = source.Jewels.Count > 0 ? source.Components.Max(rec => rec.Id)
-: 0;
+            int maxId = source.Jewels.Count > 0 ? source.Components.Max(rec => rec.Id) : 0;
             var element = new Jewel
             {
                 Id = maxId + 1,
