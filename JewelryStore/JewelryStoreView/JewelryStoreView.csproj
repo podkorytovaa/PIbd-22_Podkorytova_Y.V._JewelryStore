@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\JewelryStoreBusinessLogic\JewelryStoreBusinessLogic.csproj" />
+    <ProjectReference Include="..\JewelryStoreDatabaseImplement\JewelryStoreDatabaseImplement.csproj" />
     <ProjectReference Include="..\JewelryStoreFileImplement\JewelryStoreFileImplement.csproj" />
     <ProjectReference Include="..\JewelryStoreListImplement\JewelryStoreListImplement.csproj" />
   </ItemGroup>

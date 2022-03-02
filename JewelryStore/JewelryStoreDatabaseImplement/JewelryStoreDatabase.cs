@@ -10,7 +10,7 @@ namespace JewelryStoreDatabaseImplement
         {
             if (optionsBuilder.IsConfigured == false)
             {
-                optionsBuilder.UseSqlServer(@"Data Source=HOME\SQLEXPRESS;Initial Catalog=JewelryStoreDatabase;Integrated Security=True;MultipleActiveResultSets=True;");
+                optionsBuilder.UseSqlServer(@"Data Source=LAPTOP-1UCRGBF3\SQLEXPRESS;Initial Catalog=JewelryStoreDatabase;Integrated Security=True;MultipleActiveResultSets=True;");
             }
             base.OnConfiguring(optionsBuilder);
         }
