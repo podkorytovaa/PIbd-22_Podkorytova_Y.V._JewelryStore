@@ -121,6 +121,7 @@ namespace JewelryStoreListImplement.Implements
                 if (jewel.Id == order.JewelId)
                 {
                     jewelName = jewel.JewelName;
+                    break;
                 }
             }
             return new OrderViewModel
