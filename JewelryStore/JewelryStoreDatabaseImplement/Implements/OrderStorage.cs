@@ -63,23 +63,8 @@ namespace JewelryStoreDatabaseImplement.Implements
             }
 
             using var context = new JewelryStoreDatabase();
-            // var order = context.Orders.Include(rec => rec.Jewel).FirstOrDefault(rec => rec.Id == model.Id);
             var order = context.Orders.FirstOrDefault(rec => rec.Id == model.Id);
             return order != null ? CreateModel(order, context) : null;
-            /*
-                return order != null ?
-                new OrderViewModel
-                {
-                    Id = order.Id,
-                    JewelId = order.JewelId,
-                    JewelName = order.Jewel.JewelName,
-                    Count = order.Count,
-                    Sum = order.Sum,
-                    Status = order.Status,
-                    DateCreate = order.DateCreate,
-                    DateImplement = order.DateImplement
-                } : null;
-            */
         }
 
         public void Insert(OrderBindingModel model)

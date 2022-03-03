@@ -65,7 +65,6 @@ namespace JewelryStoreDatabaseImplement.Implements
                     JewelName = model.JewelName,
                     Price = model.Price
                 };
-                //context.Jewels.Add(CreateModel(model, new Jewel(), context));
                 context.Jewels.Add(jewel); 
                 context.SaveChanges();
                 CreateModel(model, jewel, context);
