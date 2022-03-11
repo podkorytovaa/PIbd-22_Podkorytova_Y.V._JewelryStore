@@ -16,17 +16,8 @@ namespace JewelryStoreDatabaseImplement.Implements
             using var context = new JewelryStoreDatabase();
             return context.Orders
                 .Include(rec => rec.Jewel)
-                .Select(rec => new OrderViewModel
-                {
-                    Id = rec.Id,
-                    JewelId = rec.JewelId,
-                    JewelName = rec.Jewel.JewelName,
-                    Count = rec.Count,
-                    Sum = rec.Sum,
-                    Status = rec.Status,
-                    DateCreate = rec.DateCreate,
-                    DateImplement = rec.DateImplement
-                })
+                .ToList()
+                .Select(CreateModel)
                 .ToList();
         }
 
@@ -41,17 +32,8 @@ namespace JewelryStoreDatabaseImplement.Implements
             return context.Orders
                 .Include(rec => rec.Jewel)
                 .Where(rec => rec.JewelId == model.JewelId)
-                .Select(rec => new OrderViewModel
-                {
-                    Id = rec.Id,
-                    JewelId = rec.JewelId,
-                    JewelName = rec.Jewel.JewelName,
-                    Count = rec.Count,
-                    Sum = rec.Sum,
-                    Status = rec.Status,
-                    DateCreate = rec.DateCreate,
-                    DateImplement = rec.DateImplement
-                })
+                .ToList()
+                .Select(CreateModel)
                 .ToList();
         }
 
@@ -63,8 +45,8 @@ namespace JewelryStoreDatabaseImplement.Implements
             }
 
             using var context = new JewelryStoreDatabase();
-            var order = context.Orders.FirstOrDefault(rec => rec.Id == model.Id);
-            return order != null ? CreateModel(order, context) : null;
+            var order = context.Orders.Include(rec => rec.Jewel).FirstOrDefault(rec => rec.Id == model.Id);
+            return order != null ? CreateModel(order) : null;
         }
 
         public void Insert(OrderBindingModel model)
@@ -112,13 +94,13 @@ namespace JewelryStoreDatabaseImplement.Implements
             return order;
         }
 
-        private OrderViewModel CreateModel(Order order, JewelryStoreDatabase context)
+        private OrderViewModel CreateModel(Order order)
         {
             return new OrderViewModel
             {
                 Id = order.Id,
                 JewelId = order.JewelId,
-                JewelName = context.Jewels.FirstOrDefault(rec => rec.Id == order.JewelId)?.JewelName,
+                JewelName = order.Jewel.JewelName,
                 Count = order.Count,
                 Sum = order.Sum,
                 Status = order.Status,
