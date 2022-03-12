@@ -12,5 +12,6 @@ namespace JewelryStoreContracts.StoragesContracts
         void Insert(WarehouseBindingModel model);
         void Update(WarehouseBindingModel model);
         void Delete(WarehouseBindingModel model);
+        bool CheckAndWriteOff(Dictionary<int, (string, int)> components, int count);
     }
 }

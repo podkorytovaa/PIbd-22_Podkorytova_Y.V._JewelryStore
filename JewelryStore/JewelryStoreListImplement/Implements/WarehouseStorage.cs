@@ -158,5 +158,10 @@ namespace JewelryStoreListImplement.Implements
                 WarehouseComponents = warehouseComponents
             };
         }
+
+        public bool CheckAndWriteOff(Dictionary<int, (string, int)> warehouseComponents, int jewelsCount)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

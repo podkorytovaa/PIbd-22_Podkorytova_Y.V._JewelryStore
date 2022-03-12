@@ -11,10 +11,14 @@ namespace JewelryStoreBusinessLogic.BusinessLogics
     public class OrderLogic : IOrderLogic
     {
         private readonly IOrderStorage _orderStorage;
+        private readonly IJewelStorage _jewelStorage;
+        private readonly IWarehouseStorage _warehouseStorage;
 
-        public OrderLogic(IOrderStorage orderStorage)
+        public OrderLogic(IOrderStorage orderStorage, IJewelStorage jewelStorage, IWarehouseStorage warehouseStorage)
         {
             _orderStorage = orderStorage;
+            _jewelStorage = jewelStorage;
+            _warehouseStorage = warehouseStorage;
         }
 
         public List<OrderViewModel> Read(OrderBindingModel model)
@@ -52,6 +56,10 @@ namespace JewelryStoreBusinessLogic.BusinessLogics
             if (order.Status != OrderStatus.Принят)
             {
                 throw new Exception("Заказ не в статусе \"Принят\"");
+            }
+            if (!_warehouseStorage.CheckAndWriteOff(_jewelStorage.GetElement(new JewelBindingModel { Id = order.JewelId }).JewelComponents, order.Count))
+            {
+                throw new Exception("Недостаточно компонентов");
             }
             _orderStorage.Update(new OrderBindingModel
             {
