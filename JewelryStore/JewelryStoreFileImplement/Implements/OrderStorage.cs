@@ -28,7 +28,7 @@ namespace JewelryStoreFileImplement.Implements
             {
                 return null;
             }
-            return source.Orders.Where(rec => rec.JewelId.Equals(model.JewelId)).Select(CreateModel).ToList();
+            return source.Orders.Where(rec => rec.JewelId.Equals(model.JewelId) || (rec.DateCreate >= model.DateFrom && rec.DateCreate <= model.DateTo)).Select(CreateModel).ToList();
         }
 
         public OrderViewModel GetElement(OrderBindingModel model)

@@ -31,7 +31,7 @@ namespace JewelryStoreDatabaseImplement.Implements
             using var context = new JewelryStoreDatabase();
             return context.Orders
                 .Include(rec => rec.Jewel)
-                .Where(rec => rec.JewelId == model.JewelId)
+                .Where(rec => rec.JewelId == model.JewelId || (rec.DateCreate >= model.DateFrom && rec.DateCreate <= model.DateTo))
                 .ToList()
                 .Select(CreateModel)
                 .ToList();

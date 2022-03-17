@@ -2,6 +2,8 @@ using JewelryStoreBusinessLogic.BusinessLogics;
 using JewelryStoreContracts.BusinessLogicsContracts;
 using JewelryStoreContracts.StoragesContracts;
 using JewelryStoreDatabaseImplement.Implements;
+using JewelryStoreBusinessLogic.OfficePackage;
+using JewelryStoreBusinessLogic.OfficePackage.Implements;
 using System;
 using System.Windows.Forms;
 using Unity;
@@ -44,6 +46,10 @@ namespace JewelryStoreView
             currentContainer.RegisterType<IComponentLogic, ComponentLogic>(new HierarchicalLifetimeManager());
             currentContainer.RegisterType<IOrderLogic, OrderLogic>(new HierarchicalLifetimeManager());
             currentContainer.RegisterType<IJewelLogic, JewelLogic>(new HierarchicalLifetimeManager());
+            currentContainer.RegisterType<IReportLogic, ReportLogic>(new HierarchicalLifetimeManager());
+            currentContainer.RegisterType<AbstractSaveToExcel, SaveToExcel>(new HierarchicalLifetimeManager());
+            currentContainer.RegisterType<AbstractSaveToPdf, SaveToPdf>(new HierarchicalLifetimeManager());
+            currentContainer.RegisterType<AbstractSaveToWord, SaveToWord>(new HierarchicalLifetimeManager());
             return currentContainer;
         }
     }
