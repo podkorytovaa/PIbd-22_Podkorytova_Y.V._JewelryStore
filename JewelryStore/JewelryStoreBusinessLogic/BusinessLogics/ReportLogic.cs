@@ -29,10 +29,9 @@ namespace JewelryStoreBusinessLogic.BusinessLogics
             _saveToPdf = saveToPdf;
         }
 
-        // Получение списка компонент с указанием, в каких изделиях используются
+        // Получение списка драгоценностей
         public List<ReportJewelComponentViewModel> GetJewelComponent()
         {
-            var components = _componentStorage.GetFullList();
             var jewels = _jewelStorage.GetFullList();
             var list = new List<ReportJewelComponentViewModel>();
             foreach (var jewel in jewels)
@@ -73,8 +72,8 @@ namespace JewelryStoreBusinessLogic.BusinessLogics
             })
            .ToList();
         }
-       
-        // Сохранение компонент в файл-Word
+
+        // Сохранение драгоценностей в файл-Word
         public void SaveJewelsToWordFile(ReportBindingModel model)
         {
             _saveToWord.CreateDoc(new WordInfo
@@ -84,14 +83,14 @@ namespace JewelryStoreBusinessLogic.BusinessLogics
                 Jewels = _jewelStorage.GetFullList()
             });
         }
-        
-        // Сохранение компонент с указаеним продуктов в файл-Excel
+
+        // Сохранение драгоценностей в файл-Excel
         public void SaveJewelComponentToExcelFile(ReportBindingModel model)
         {
             _saveToExcel.CreateReport(new ExcelInfo
             {
                 FileName = model.FileName,
-                Title = "Список компонент",
+                Title = "Список драгоценностей",
                 JewelComponents = GetJewelComponent()
             });
         }

@@ -16,12 +16,12 @@ namespace JewelryStoreBusinessLogic.OfficePackage
                 TextProperties = new WordTextProperties { Size = "24", JustificationType = WordJustificationType.Center }
             });
 
-            foreach (var component in info.Jewels)
+            foreach (var jewel in info.Jewels)
             {
                 CreateParagraph(new WordParagraph
                 {
-                    Texts = new List<(string, WordTextProperties)> { (component.JewelName, new WordTextProperties { Bold = true, Size = "24", }),
-                        (" Цена: " + component.Price.ToString(), new WordTextProperties {Bold = false, Size = "24"})},
+                    Texts = new List<(string, WordTextProperties)> { (jewel.JewelName, new WordTextProperties { Bold = true, Size = "24", }),
+                        (" Цена: " + jewel.Price.ToString(), new WordTextProperties {Bold = false, Size = "24"})},
                     TextProperties = new WordTextProperties { Size = "24", JustificationType = WordJustificationType.Both }
                 });
             }
