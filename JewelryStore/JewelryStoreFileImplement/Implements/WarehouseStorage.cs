@@ -127,7 +127,7 @@ namespace JewelryStoreFileImplement.Implements
             {
                 int count = warehouseComponent.Value.Item2 * jewelsCount;
                
-                IEnumerable<Warehouse> warehouses = source.Warehouses.Where(component => component.WarehouseComponents.ContainsKey(warehouseComponent.Key));
+                var warehouses = source.Warehouses.Where(component => component.WarehouseComponents.ContainsKey(warehouseComponent.Key));
 
                 foreach (Warehouse warehouse in warehouses)
                 {
