@@ -28,7 +28,7 @@ namespace JewelryStoreFileImplement.Implements
             {
                 return null;
             }
-            return source.Orders.Where(rec => rec.JewelId.Equals(model.JewelId) || (rec.DateCreate >= model.DateFrom && rec.DateCreate <= model.DateTo)).Select(CreateModel).ToList();
+            return source.Orders.Where(rec => (!model.DateFrom.HasValue && !model.DateTo.HasValue && rec.DateCreate.Date == model.DateCreate.Date) || (model.DateFrom.HasValue && model.DateTo.HasValue && rec.DateCreate.Date >= model.DateFrom.Value.Date && rec.DateCreate.Date <= model.DateTo.Value.Date) || (model.ClientId.HasValue && rec.ClientId == model.ClientId)).Select(CreateModel).ToList();
         }
 
         public OrderViewModel GetElement(OrderBindingModel model)
@@ -74,6 +74,7 @@ namespace JewelryStoreFileImplement.Implements
 
         private Order CreateModel(OrderBindingModel model, Order order)
         {
+            order.ClientId = model.ClientId.Value; 
             order.JewelId = model.JewelId;
             order.Count = model.Count;
             order.Sum = model.Sum;
@@ -88,6 +89,8 @@ namespace JewelryStoreFileImplement.Implements
             return new OrderViewModel
             {
                 Id = order.Id,
+                ClientId = order.ClientId,
+                ClientFIO = source.Clients.FirstOrDefault(rec => rec.Id == order.ClientId)?.ClientFIO,
                 JewelId = order.JewelId,
                 JewelName = source.Jewels.FirstOrDefault(rec => rec.Id == order.JewelId)?.JewelName,
                 Count = order.Count,

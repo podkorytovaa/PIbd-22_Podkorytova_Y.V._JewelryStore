@@ -10,12 +10,14 @@ namespace JewelryStoreView
     {
         private readonly IJewelLogic _logicJ;
         private readonly IOrderLogic _logicO;
+        private readonly IClientLogic _logicC;
 
-        public FormCreateOrder(IJewelLogic logicJ, IOrderLogic logicO)
+        public FormCreateOrder(IJewelLogic logicJ, IOrderLogic logicO, IClientLogic logicC)
         {
             InitializeComponent();
             _logicJ = logicJ;
             _logicO = logicO;
+            _logicC = logicC;
         }
 
         private void FormCreateOrder_Load(object sender, EventArgs e)
@@ -29,6 +31,15 @@ namespace JewelryStoreView
                     comboBoxJewel.DisplayMember = "JewelName";
                     comboBoxJewel.ValueMember = "Id";
                     comboBoxJewel.SelectedItem = null;
+                }
+
+                var listClients = _logicC.Read(null);
+                foreach (var client in listClients)
+                {
+                    comboBoxClient.DataSource = listClients;
+                    comboBoxClient.DisplayMember = "ClientFIO";
+                    comboBoxClient.ValueMember = "Id";
+                    comboBoxClient.SelectedItem = null;
                 }
             }
             catch (Exception ex)
@@ -81,6 +92,7 @@ namespace JewelryStoreView
             {
                 _logicO.CreateOrder(new CreateOrderBindingModel
                 {
+                    ClientId = Convert.ToInt32(comboBoxClient.SelectedValue),
                     JewelId = Convert.ToInt32(comboBoxJewel.SelectedValue),
                     Count = Convert.ToInt32(textBoxCount.Text),
                     Sum = Convert.ToDecimal(textBoxSum.Text)

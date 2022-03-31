@@ -34,6 +34,7 @@ namespace JewelryStoreBusinessLogic.BusinessLogics
         {
             _orderStorage.Insert(new OrderBindingModel
             {
+                ClientId = model.ClientId,
                 JewelId = model.JewelId,
                 Count = model.Count,
                 Sum = model.Sum,
@@ -56,6 +57,7 @@ namespace JewelryStoreBusinessLogic.BusinessLogics
             _orderStorage.Update(new OrderBindingModel
             {
                 Id = order.Id,
+                ClientId = order.ClientId,
                 JewelId = order.JewelId,
                 Count = order.Count,
                 Sum = order.Sum,
@@ -79,6 +81,7 @@ namespace JewelryStoreBusinessLogic.BusinessLogics
             _orderStorage.Update(new OrderBindingModel
             {
                 Id = order.Id,
+                ClientId = order.ClientId,
                 JewelId = order.JewelId,
                 Count = order.Count,
                 Sum = order.Sum,
@@ -102,6 +105,7 @@ namespace JewelryStoreBusinessLogic.BusinessLogics
             _orderStorage.Update(new OrderBindingModel
             {
                 Id = order.Id,
+                ClientId = order.ClientId,
                 JewelId = order.JewelId,
                 Count = order.Count,
                 Sum = order.Sum,
