@@ -39,6 +39,11 @@ namespace JewelryStoreView
             }
         }
 
+        private void buttonUpd_Click(object sender, EventArgs e)
+        {
+            LoadData();
+        }
+
         private void buttonDel_Click(object sender, EventArgs e)
         {
             if (dataGridView.SelectedRows.Count == 1)

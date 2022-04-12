@@ -24,10 +24,10 @@ namespace JewelryStoreView
         {
             try
             {
-                var list = _logicJ.Read(null);
-                if (list != null)
+                var listJewels = _logicJ.Read(null);
+                if (listJewels != null)
                 {
-                    comboBoxJewel.DataSource = list;
+                    comboBoxJewel.DataSource = listJewels;
                     comboBoxJewel.DisplayMember = "JewelName";
                     comboBoxJewel.ValueMember = "Id";
                     comboBoxJewel.SelectedItem = null;

@@ -47,7 +47,7 @@ namespace JewelryStoreDatabaseImplement.Implements
             }
 
             using var context = new JewelryStoreDatabase();
-            var order = context.Orders.Include(rec => rec.Jewel).FirstOrDefault(rec => rec.Id == model.Id);
+            var order = context.Orders.Include(rec => rec.Jewel).Include(rec => rec.Client).FirstOrDefault(rec => rec.Id == model.Id);
             return order != null ? CreateModel(order) : null;
         }
 

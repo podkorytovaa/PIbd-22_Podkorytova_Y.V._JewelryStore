@@ -30,6 +30,7 @@
         {
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.buttonDel = new System.Windows.Forms.Button();
+            this.buttonUpd = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -54,11 +55,22 @@
             this.buttonDel.UseVisualStyleBackColor = true;
             this.buttonDel.Click += new System.EventHandler(this.buttonDel_Click);
             // 
+            // buttonUpd
+            // 
+            this.buttonUpd.Location = new System.Drawing.Point(365, 515);
+            this.buttonUpd.Name = "buttonUpd";
+            this.buttonUpd.Size = new System.Drawing.Size(94, 29);
+            this.buttonUpd.TabIndex = 2;
+            this.buttonUpd.Text = "Обновить";
+            this.buttonUpd.UseVisualStyleBackColor = true;
+            this.buttonUpd.Click += new System.EventHandler(this.buttonUpd_Click);
+            // 
             // FormClients
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(582, 553);
+            this.Controls.Add(this.buttonUpd);
             this.Controls.Add(this.buttonDel);
             this.Controls.Add(this.dataGridView);
             this.Name = "FormClients";
@@ -73,5 +85,6 @@
 
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.Button buttonDel;
+        private System.Windows.Forms.Button buttonUpd;
     }
 }

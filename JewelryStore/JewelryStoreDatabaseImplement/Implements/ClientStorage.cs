@@ -66,13 +66,16 @@ namespace JewelryStoreDatabaseImplement.Implements
         public void Delete(ClientBindingModel model)
         {
             using var context = new JewelryStoreDatabase();
-            var client = context.Clients.FirstOrDefault(rec => rec.Id == model.Id);
+            Client client = context.Clients.FirstOrDefault(rec => rec.Id == model.Id);
             if (client == null)
+            {
+                context.Clients.Remove(client);
+                context.SaveChanges();
+            }
+            else
             {
                 throw new Exception("Клиент не найден");
             }
-            CreateModel(model, client);
-            context.SaveChanges();
         }
 
         private static Client CreateModel(ClientBindingModel model, Client client)
