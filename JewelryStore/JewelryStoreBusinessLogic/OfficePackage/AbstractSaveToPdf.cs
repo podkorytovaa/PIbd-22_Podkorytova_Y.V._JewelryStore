@@ -40,6 +40,38 @@ namespace JewelryStoreBusinessLogic.OfficePackage
             SavePdf(info);
         }
 
+        public void CreateDocOrdersGroupedByDate(PdfInfo info)
+        {
+            CreatePdf(info);
+
+            CreateParagraph(new PdfParagraph
+            {
+                Text = info.Title,
+                Style = "NormalTitle"
+            });
+
+            CreateTable(new List<string> { "3cm", "3cm", "6cm" });
+
+            CreateRow(new PdfRowParameters
+            {
+                Texts = new List<string> { "Дата", "Количество заказов", "Общая сумма по заказам" },
+                Style = "NormalTitle",
+                ParagraphAlignment = PdfParagraphAlignmentType.Center
+            });
+
+            foreach (var order in info.OrdersGroupedByDate)
+            {
+                CreateRow(new PdfRowParameters
+                {
+                    Texts = new List<string> { order.DateCreate.ToShortDateString(), order.Count.ToString(), order.Sum.ToString() },
+                    Style = "Normal",
+                    ParagraphAlignment = PdfParagraphAlignmentType.Left
+                });
+            }
+
+            SavePdf(info);
+        }
+
         // Создание doc-файла
         protected abstract void CreatePdf(PdfInfo info);
         
