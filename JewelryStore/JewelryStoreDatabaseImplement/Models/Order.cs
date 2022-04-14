@@ -12,6 +12,8 @@ namespace JewelryStoreDatabaseImplement.Models
 
         public int JewelId { get; set; }
 
+        public int? ImplementerId { get; set; }
+
         [Required]
         public int Count { get; set; }
 
@@ -29,5 +31,7 @@ namespace JewelryStoreDatabaseImplement.Models
         public virtual Jewel Jewel { get; set; }
 
         public virtual Client Client { get; set; }
+
+        public virtual Implementer Implementer { get; set; }
     }
 }

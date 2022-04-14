@@ -19,6 +19,11 @@ namespace JewelryStoreContracts.ViewModels
         [DisplayName("Драгоценность")]
         public string JewelName { get; set; }
 
+        public int? ImplementerId { get; set; }
+
+        [DisplayName("ФИО исполнителя")]
+        public string ImplementerFIO { get; set; }
+
         [DisplayName("Количество")]
         public int Count { get; set; }
 

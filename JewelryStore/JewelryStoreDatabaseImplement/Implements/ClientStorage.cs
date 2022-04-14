@@ -67,7 +67,7 @@ namespace JewelryStoreDatabaseImplement.Implements
         {
             using var context = new JewelryStoreDatabase();
             Client client = context.Clients.FirstOrDefault(rec => rec.Id == model.Id);
-            if (client == null)
+            if (client != null)
             {
                 context.Clients.Remove(client);
                 context.SaveChanges();
