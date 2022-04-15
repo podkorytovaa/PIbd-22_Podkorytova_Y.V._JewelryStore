@@ -168,7 +168,7 @@ namespace JewelryStoreView
             }
         }
 
-        private void компоToolStripMenuItem_Click(object sender, EventArgs e)
+        private void компонентыПоСкладамToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var form = Program.Container.Resolve<FormReportWarehouseComponent>();
             form.ShowDialog();
@@ -178,6 +178,6 @@ namespace JewelryStoreView
         {
             var form = Program.Container.Resolve<FormReportOrdersGroupedByDate>();
             form.ShowDialog();
-        }
+        } 
     }
 }

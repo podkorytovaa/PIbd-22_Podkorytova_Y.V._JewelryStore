@@ -77,17 +77,18 @@ namespace JewelryStoreBusinessLogic.BusinessLogics
             }
             return list;
         }
+
         public List<ReportOrdersGroupedByDateViewModel> GetOrdersGroupedByDate()
         {
             return _orderStorage.GetFullList()
-            .GroupBy(rec => rec.DateCreate.ToShortDateString())
-            .Select(x => new ReportOrdersGroupedByDateViewModel
-            {
-                DateCreate = Convert.ToDateTime(x.Key),
-                Count = x.Count(),
-                Sum = x.Sum(rec => rec.Sum)
-            })
-           .ToList();
+                .GroupBy(rec => rec.DateCreate.ToShortDateString())
+                .Select(x => new ReportOrdersGroupedByDateViewModel
+                {
+                    DateCreate = Convert.ToDateTime(x.Key),
+                    Count = x.Count(),
+                    Sum = x.Sum(rec => rec.Sum)
+                })
+                .ToList();
         }
 
         // Получение списка заказов за определенный период
