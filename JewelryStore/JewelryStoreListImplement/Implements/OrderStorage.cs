@@ -138,7 +138,7 @@ namespace JewelryStoreListImplement.Implements
             string implementerFIO = null;
             foreach (var implementer in source.Implementers)
             {
-                if (implementer.Id == order.ImplementerId)
+                if (order.ImplementerId.HasValue && implementer.Id == order.ImplementerId)
                 {
                     implementerFIO = implementer.ImplementerFIO;
                     break;

@@ -95,7 +95,7 @@ namespace JewelryStoreFileImplement.Implements
                 JewelId = order.JewelId,
                 JewelName = source.Jewels.FirstOrDefault(rec => rec.Id == order.JewelId)?.JewelName,
                 ImplementerId = order.ImplementerId,
-                ImplementerFIO = source.Implementers.FirstOrDefault(rec => rec.Id == order.ImplementerId)?.ImplementerFIO,
+                ImplementerFIO = order.ImplementerId.HasValue ? source.Implementers.FirstOrDefault(rec => rec.Id == order.ImplementerId)?.ImplementerFIO : string.Empty,
                 Count = order.Count,
                 Sum = order.Sum,
                 Status = order.Status,
