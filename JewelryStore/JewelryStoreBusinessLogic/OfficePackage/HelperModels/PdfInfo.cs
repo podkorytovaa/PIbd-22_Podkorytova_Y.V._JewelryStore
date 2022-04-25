@@ -11,5 +11,6 @@ namespace JewelryStoreBusinessLogic.OfficePackage.HelperModels
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
         public List<ReportOrdersViewModel> Orders { get; set; }
+        public List<ReportOrdersGroupedByDateViewModel> OrdersGroupedByDate { get; set; }
     }
 }

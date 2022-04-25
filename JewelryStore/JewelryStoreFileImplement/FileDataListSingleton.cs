@@ -14,10 +14,12 @@ namespace JewelryStoreFileImplement
         private readonly string ComponentFileName = "Component.xml";
         private readonly string OrderFileName = "Order.xml";
         private readonly string JewelFileName = "Jewel.xml";
+        private readonly string WarehouseFileName = "Warehouse.xml";
         private readonly string ClientFileName = "Client.xml";
         public List<Component> Components { get; set; }
         public List<Order> Orders { get; set; }
         public List<Jewel> Jewels { get; set; }
+        public List<Warehouse> Warehouses { get; set; }
         public List<Client> Clients { get; set; }
 
         private FileDataListSingleton()
@@ -25,6 +27,7 @@ namespace JewelryStoreFileImplement
             Components = LoadComponents();
             Orders = LoadOrders();
             Jewels = LoadJewels();
+            Warehouses = LoadWarehouses();
             Clients = LoadClients();
         }
 
@@ -42,6 +45,7 @@ namespace JewelryStoreFileImplement
             instance.SaveComponents();
             instance.SaveOrders();
             instance.SaveJewels();
+            instance.SaveWarehouses();
             instance.SaveClients();
         }
 
@@ -109,6 +113,33 @@ namespace JewelryStoreFileImplement
                         JewelName = elem.Element("JewelName").Value,
                         Price = Convert.ToDecimal(elem.Element("Price").Value),
                         JewelComponents = jewComp
+                    });
+                }
+            }
+            return list;
+        }
+
+        private List<Warehouse> LoadWarehouses()
+        {
+            var list = new List<Warehouse>();
+            if (File.Exists(WarehouseFileName))
+            {
+                var xDocument = XDocument.Load(WarehouseFileName);
+                var xElements = xDocument.Root.Elements("Warehouse").ToList();
+                foreach (var elem in xElements)
+                {
+                    var warehouseComp = new Dictionary<int, int>();
+                    foreach (var component in elem.Element("WarehouseComponents").Elements("WarehouseComponent").ToList())
+                    {
+                        warehouseComp.Add(Convert.ToInt32(component.Element("Key").Value), Convert.ToInt32(component.Element("Value").Value));
+                    }
+                    list.Add(new Warehouse
+                    {
+                        Id = Convert.ToInt32(elem.Attribute("Id").Value),
+                        WarehouseName = elem.Element("WarehouseName").Value,
+                        ResponsibleFullName = elem.Element("ResponsibleFullName").Value,
+                        DateCreate = Convert.ToDateTime(elem.Element("DateCreate").Value),
+                        WarehouseComponents = warehouseComp
                     });
                 }
             }
@@ -196,6 +227,32 @@ namespace JewelryStoreFileImplement
                 }
                 var xDocument = new XDocument(xElement);
                 xDocument.Save(JewelFileName);
+            }
+        }
+
+        private void SaveWarehouses()
+        {
+            if (Warehouses != null)
+            {
+                var xElement = new XElement("Warehouses");
+                foreach (var warehouse in Warehouses)
+                {
+                    var compElement = new XElement("WarehouseComponents");
+                    foreach (var component in warehouse.WarehouseComponents)
+                    {
+                        compElement.Add(new XElement("WarehouseComponent",
+                            new XElement("Key", component.Key),
+                            new XElement("Value", component.Value)));
+                    }
+                    xElement.Add(new XElement("Warehouse",
+                        new XAttribute("Id", warehouse.Id),
+                        new XElement("WarehouseName", warehouse.WarehouseName),
+                        new XElement("ResponsibleFullName", warehouse.ResponsibleFullName),
+                        new XElement("DateCreate", warehouse.DateCreate),
+                        compElement));
+                }
+                var xDocument = new XDocument(xElement);
+                xDocument.Save(WarehouseFileName);
             }
         }
 
