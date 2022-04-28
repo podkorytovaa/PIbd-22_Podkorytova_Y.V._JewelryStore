@@ -54,15 +54,12 @@ namespace JewelryStoreBusinessLogic.BusinessLogics
             {
                 throw new Exception("Не найден заказ");
             }
-            if (order.Status != OrderStatus.Принят)
+            if (order.Status != OrderStatus.Принят && order.Status != OrderStatus.ТребуютсяМатериалы)
             {
-                throw new Exception("Заказ не в статусе \"Принят\"");
+                throw new Exception("Заказ не в статусе \"Принят\" или \"Требуются материалы\"");
             }
-            if (!_warehouseStorage.CheckAndWriteOff(_jewelStorage.GetElement(new JewelBindingModel { Id = order.JewelId }).JewelComponents, order.Count))
-            {
-                throw new Exception("Недостаточно компонентов");
-            }
-            _orderStorage.Update(new OrderBindingModel
+
+            var orderBM = new OrderBindingModel
             {
                 Id = order.Id,
                 ClientId = order.ClientId,
@@ -70,10 +67,23 @@ namespace JewelryStoreBusinessLogic.BusinessLogics
                 ImplementerId = model.ImplementerId,
                 Count = order.Count,
                 Sum = order.Sum,
-                DateCreate = order.DateCreate,
-                DateImplement = DateTime.Now,
-                Status = OrderStatus.Выполняется
-            });
+                DateCreate = order.DateCreate
+            };
+
+            try
+            {
+                if (_warehouseStorage.CheckAndWriteOff(_jewelStorage.GetElement(new JewelBindingModel { Id = order.JewelId }).JewelComponents, order.Count))
+                {
+                    orderBM.Status = OrderStatus.Выполняется;
+                    orderBM.DateImplement = DateTime.Now;
+                    _orderStorage.Update(orderBM);
+                }
+            }
+            catch
+            {
+                orderBM.Status = OrderStatus.ТребуютсяМатериалы;
+                _orderStorage.Update(orderBM);
+            }        
         }
 
         public void FinishOrder(ChangeStatusBindingModel model)
