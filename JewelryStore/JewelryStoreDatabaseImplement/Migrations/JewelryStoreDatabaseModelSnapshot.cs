@@ -167,6 +167,54 @@ namespace JewelryStoreDatabaseImplement.Migrations
                     b.ToTable("Orders");
                 });
 
+            modelBuilder.Entity("JewelryStoreDatabaseImplement.Models.Warehouse", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<DateTime>("DateCreate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ResponsibleFullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WarehouseName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Warehouses");
+                });
+
+            modelBuilder.Entity("JewelryStoreDatabaseImplement.Models.WarehouseComponent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("ComponentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WarehouseId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ComponentId");
+
+                    b.HasIndex("WarehouseId");
+
+                    b.ToTable("WarehouseComponents");
+                });
+
             modelBuilder.Entity("JewelryStoreDatabaseImplement.Models.JewelComponent", b =>
                 {
                     b.HasOne("JewelryStoreDatabaseImplement.Models.Component", "Component")
@@ -211,14 +259,30 @@ namespace JewelryStoreDatabaseImplement.Migrations
                     b.Navigation("Jewel");
                 });
 
-            modelBuilder.Entity("JewelryStoreDatabaseImplement.Models.Client", b =>
+            modelBuilder.Entity("JewelryStoreDatabaseImplement.Models.WarehouseComponent", b =>
                 {
-                    b.Navigation("Orders");
+                    b.HasOne("JewelryStoreDatabaseImplement.Models.Component", "Component")
+                        .WithMany("WarehouseComponents")
+                        .HasForeignKey("ComponentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JewelryStoreDatabaseImplement.Models.Warehouse", "Warehouse")
+                        .WithMany("WarehouseComponents")
+                        .HasForeignKey("WarehouseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Component");
+
+                    b.Navigation("Warehouse");
                 });
 
             modelBuilder.Entity("JewelryStoreDatabaseImplement.Models.Component", b =>
                 {
                     b.Navigation("JewelComponents");
+
+                    b.Navigation("WarehouseComponents");
                 });
 
             modelBuilder.Entity("JewelryStoreDatabaseImplement.Models.Implementer", b =>
@@ -231,6 +295,11 @@ namespace JewelryStoreDatabaseImplement.Migrations
                     b.Navigation("JewelComponents");
 
                     b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("JewelryStoreDatabaseImplement.Models.Warehouse", b =>
+                {
+                    b.Navigation("WarehouseComponents");
                 });
 #pragma warning restore 612, 618
         }
