@@ -16,11 +16,13 @@ namespace JewelryStoreFileImplement
         private readonly string JewelFileName = "Jewel.xml";
         private readonly string ClientFileName = "Client.xml";
         private readonly string ImplementerFileName = "Implementer.xml";
+        private readonly string MessageInfoFileName = "MessageInfo.xml";
         public List<Component> Components { get; set; }
         public List<Order> Orders { get; set; }
         public List<Jewel> Jewels { get; set; }
         public List<Client> Clients { get; set; }
         public List<Implementer> Implementers { get; set; }
+        public List<MessageInfo> MessagesInfo { get; set; }
 
         private FileDataListSingleton()
         {
@@ -29,6 +31,7 @@ namespace JewelryStoreFileImplement
             Jewels = LoadJewels();
             Clients = LoadClients();
             Implementers = LoadImplementers();
+            MessagesInfo = LoadMessagesInfo();
         }
 
         public static FileDataListSingleton GetInstance()
@@ -47,6 +50,7 @@ namespace JewelryStoreFileImplement
             instance.SaveJewels();
             instance.SaveClients();
             instance.SaveImplementers();
+            instance.SaveMessagesInfo();
         }
 
         private List<Component> LoadComponents()
@@ -162,6 +166,35 @@ namespace JewelryStoreFileImplement
             return list;
         }
 
+        private List<MessageInfo> LoadMessagesInfo()
+        {
+            var list = new List<MessageInfo>();
+            if (File.Exists(MessageInfoFileName))
+            {
+                var xDocument = XDocument.Load(MessageInfoFileName);
+                var xElements = xDocument.Root.Elements("Message").ToList();
+                int? clientId;
+                foreach (var elem in xElements)
+                {
+                    clientId = null;
+                    if (elem.Element("ClientId").Value != "")
+                    {
+                        clientId = Convert.ToInt32(elem.Element("ClientId").Value);
+                    }
+                    list.Add(new MessageInfo
+                    {
+                        MessageId = elem.Attribute("MessageId").Value,
+                        ClientId = clientId,
+                        SenderName = elem.Element("SenderName").Value,
+                        DateDelivery = DateTime.Parse(elem.Element("DateDelivery").Value),
+                        Subject = elem.Element("Subject").Value,
+                        Body = elem.Element("Body").Value
+                    });
+                }
+            }
+            return list;
+        }
+
         private void SaveComponents()
         {
             if (Components != null)
@@ -259,6 +292,26 @@ namespace JewelryStoreFileImplement
                 }
                 XDocument xDocument = new XDocument(xElement);
                 xDocument.Save(ImplementerFileName);
+            }
+        }
+
+        private void SaveMessagesInfo()
+        {
+            if (MessagesInfo != null)
+            {
+                var xElement = new XElement("MessagesInfo");
+                foreach (var messageInfo in MessagesInfo)
+                {
+                    xElement.Add(new XElement("MessageInfo",
+                        new XAttribute("MessageId", messageInfo.MessageId),
+                        new XElement("ClientId", messageInfo.ClientId),
+                        new XElement("SenderName", messageInfo.SenderName),
+                        new XElement("Subject", messageInfo.Subject),
+                        new XElement("Body", messageInfo.Body),
+                        new XElement("DateDelivery", messageInfo.DateDelivery)));
+                }
+                var xDocument = new XDocument(xElement);
+                xDocument.Save(OrderFileName);
             }
         }
     }

@@ -3,6 +3,7 @@ using JewelryStoreContracts.BusinessLogicsContracts;
 using JewelryStoreContracts.StoragesContracts;
 using JewelryStoreContracts.ViewModels;
 using JewelryStoreContracts.Enums;
+using JewelryStoreBusinessLogic.MailWorker;
 using System;
 using System.Collections.Generic;
 
@@ -11,10 +12,14 @@ namespace JewelryStoreBusinessLogic.BusinessLogics
     public class OrderLogic : IOrderLogic
     {
         private readonly IOrderStorage _orderStorage;
+        private readonly IClientStorage _clientStorage;
+        private readonly AbstractMailWorker _mailWorker;
 
-        public OrderLogic(IOrderStorage orderStorage)
+        public OrderLogic(IOrderStorage orderStorage, IClientStorage clientStorage, AbstractMailWorker mailWorker)
         {
             _orderStorage = orderStorage;
+            _clientStorage = clientStorage;
+            _mailWorker = mailWorker;
         }
 
         public List<OrderViewModel> Read(OrderBindingModel model)
@@ -41,6 +46,13 @@ namespace JewelryStoreBusinessLogic.BusinessLogics
                 Status = OrderStatus.Принят,
                 DateCreate = DateTime.Now
             });
+
+            _mailWorker.MailSendAsync(new MailSendInfoBindingModel
+            {
+                MailAddress = _clientStorage.GetElement(new ClientBindingModel { Id = model.ClientId })?.Login,
+                Subject = "Создан новый заказ",
+                Text = $"Дата заказа: {DateTime.Now}, сумма заказа: {model.Sum}"
+            });
         }
 
         public void TakeOrderInWork(ChangeStatusBindingModel model)
@@ -65,6 +77,13 @@ namespace JewelryStoreBusinessLogic.BusinessLogics
                 DateCreate = order.DateCreate,
                 DateImplement = DateTime.Now,
                 Status = OrderStatus.Выполняется
+            });
+
+            _mailWorker.MailSendAsync(new MailSendInfoBindingModel
+            {
+                MailAddress = _clientStorage.GetElement(new ClientBindingModel { Id = order.ClientId })?.Login,
+                Subject = $"Смена статуса заказа № {order.Id}",
+                Text = $"Статус заказа изменен на: {OrderStatus.Выполняется}"
             });
         }
 
@@ -91,6 +110,13 @@ namespace JewelryStoreBusinessLogic.BusinessLogics
                 DateImplement = order.DateImplement,
                 Status = OrderStatus.Готов
             });
+
+            _mailWorker.MailSendAsync(new MailSendInfoBindingModel
+            {
+                MailAddress = _clientStorage.GetElement(new ClientBindingModel { Id = order.ClientId })?.Login,
+                Subject = $"Смена статуса заказа № {order.Id}",
+                Text = $"Статус заказа изменен на: {OrderStatus.Готов}"
+            });
         }
 
         public void DeliveryOrder(ChangeStatusBindingModel model)
@@ -115,6 +141,13 @@ namespace JewelryStoreBusinessLogic.BusinessLogics
                 DateCreate = order.DateCreate,
                 DateImplement = order.DateImplement,
                 Status = OrderStatus.Выдан
+            });
+
+            _mailWorker.MailSendAsync(new MailSendInfoBindingModel
+            {
+                MailAddress = _clientStorage.GetElement(new ClientBindingModel { Id = order.ClientId })?.Login,
+                Subject = $"Смена статуса заказа № {order.Id}",
+                Text = $"Статус заказа изменен на: {OrderStatus.Выдан}"
             });
         }
     }

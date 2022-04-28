@@ -143,5 +143,15 @@ namespace JewelryStoreClientApp.Controllers
             JewelViewModel jew = APIClient.GetRequest<JewelViewModel>($"api/main/getjewel?jewelId={jewel}");
             return count * jew.Price;
         }
+
+        [HttpGet]
+        public IActionResult MessagesInfo()
+        {
+            if (Program.Client == null)
+            {
+                return Redirect("~/Home/Enter");
+            }
+            return View(APIClient.GetRequest<List<MessageInfoViewModel>> ($"api/client/GetMessagesInfo?clientId={Program.Client.Id}"));
+        }
     }
 }

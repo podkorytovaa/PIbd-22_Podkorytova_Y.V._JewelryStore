@@ -11,6 +11,7 @@ namespace JewelryStoreListImplement
         public List<Jewel> Jewels { get; set; }
         public List<Client> Clients { get; set; }
         public List<Implementer> Implementers { get; set; }
+        public List<MessageInfo> MessagesInfo { get; set; }
         private DataListSingleton()
         {
             Components = new List<Component>();
@@ -18,6 +19,7 @@ namespace JewelryStoreListImplement
             Jewels = new List<Jewel>();
             Clients = new List<Client>();
             Implementers = new List<Implementer>();
+            MessagesInfo = new List<MessageInfo>();
         }
         public static DataListSingleton GetInstance()
         {

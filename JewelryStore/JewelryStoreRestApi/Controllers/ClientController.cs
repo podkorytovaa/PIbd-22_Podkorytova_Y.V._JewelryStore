@@ -2,6 +2,7 @@
 using JewelryStoreContracts.BusinessLogicsContracts;
 using JewelryStoreContracts.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace JewelryStoreRestApi.Controllers
 {
@@ -9,17 +10,19 @@ namespace JewelryStoreRestApi.Controllers
     [ApiController]
     public class ClientController : ControllerBase
     {
-        private readonly IClientLogic _logic;
+        private readonly IClientLogic _clientLogic;
+        private readonly IMessageInfoLogic _messageLogic;
 
-        public ClientController(IClientLogic logic)
+        public ClientController(IClientLogic clientLogic, IMessageInfoLogic messageLogic)
         {
-            _logic = logic;
+            _clientLogic = clientLogic;
+            _messageLogic = messageLogic;
         }
 
         [HttpGet]
         public ClientViewModel Login(string login, string password)
         {
-            var list = _logic.Read(new ClientBindingModel
+            var list = _clientLogic.Read(new ClientBindingModel
             {
                 Login = login,
                 Password = password
@@ -28,9 +31,12 @@ namespace JewelryStoreRestApi.Controllers
         }
 
         [HttpPost]
-        public void Register(ClientBindingModel model) => _logic.CreateOrUpdate(model);
+        public void Register(ClientBindingModel model) => _clientLogic.CreateOrUpdate(model);
 
         [HttpPost]
-        public void UpdateData(ClientBindingModel model) => _logic.CreateOrUpdate(model);
+        public void UpdateData(ClientBindingModel model) => _clientLogic.CreateOrUpdate(model);
+
+        [HttpGet]
+        public List<MessageInfoViewModel> GetMessagesInfo(int clientId) => _messageLogic.Read(new MessageInfoBindingModel { ClientId = clientId });
     }
 }
