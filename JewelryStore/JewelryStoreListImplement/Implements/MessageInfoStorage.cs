@@ -4,7 +4,6 @@ using JewelryStoreContracts.ViewModels;
 using JewelryStoreListImplement.Models;
 using System.Collections.Generic;
 
-
 namespace JewelryStoreListImplement.Implements
 {
     public class MessageInfoStorage : IMessageInfoStorage
@@ -45,6 +44,10 @@ namespace JewelryStoreListImplement.Implements
 
         public void Insert(MessageInfoBindingModel model)
         {
+            if (model == null)
+            {
+                return;
+            }
             source.MessagesInfo.Add(CreateModel(model, new MessageInfo()));
         }
 
