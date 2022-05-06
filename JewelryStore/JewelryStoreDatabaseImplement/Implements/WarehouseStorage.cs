@@ -186,7 +186,7 @@ namespace JewelryStoreDatabaseImplement.Implements
                     }
                     if (requiredCompCount != 0)
                     {
-                        throw new Exception("На складе недостаточно компонент");
+                        return false;
                     }
                 }
                 context.SaveChanges();

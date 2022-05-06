@@ -13,6 +13,7 @@ namespace JewelryStoreBusinessLogic.BusinessLogics
         private readonly IOrderStorage _orderStorage;
         private readonly IJewelStorage _jewelStorage;
         private readonly IWarehouseStorage _warehouseStorage;
+        private readonly object locker = new object();
 
         public OrderLogic(IOrderStorage orderStorage, IJewelStorage jewelStorage, IWarehouseStorage warehouseStorage)
         {
@@ -49,41 +50,42 @@ namespace JewelryStoreBusinessLogic.BusinessLogics
 
         public void TakeOrderInWork(ChangeStatusBindingModel model)
         {
-            var order = _orderStorage.GetElement(new OrderBindingModel { Id = model.OrderId });
-            if (order == null)
+            lock (locker)
             {
-                throw new Exception("Не найден заказ");
-            }
-            if (order.Status != OrderStatus.Принят && order.Status != OrderStatus.ТребуютсяМатериалы)
-            {
-                throw new Exception("Заказ не в статусе \"Принят\" или \"Требуются материалы\"");
-            }
-
-            var orderBM = new OrderBindingModel
-            {
-                Id = order.Id,
-                ClientId = order.ClientId,
-                JewelId = order.JewelId,
-                ImplementerId = model.ImplementerId,
-                Count = order.Count,
-                Sum = order.Sum,
-                DateCreate = order.DateCreate
-            };
-
-            try
-            {
-                if (_warehouseStorage.CheckAndWriteOff(_jewelStorage.GetElement(new JewelBindingModel { Id = order.JewelId }).JewelComponents, order.Count))
+                var order = _orderStorage.GetElement(new OrderBindingModel { Id = model.OrderId });
+                if (order == null)
                 {
-                    orderBM.Status = OrderStatus.Выполняется;
-                    orderBM.DateImplement = DateTime.Now;
-                    _orderStorage.Update(orderBM);
+                    throw new Exception("Не найден заказ");
+                }
+                if (order.Status != OrderStatus.Принят && order.Status != OrderStatus.ТребуютсяМатериалы)
+                {
+                    throw new Exception("Заказ не в статусе \"Принят\" или \"Требуются материалы\"");
+                }
+
+                var jewel = _jewelStorage.GetElement(new JewelBindingModel { Id = order.JewelId });
+                var tempOrder = new OrderBindingModel
+                {
+                    Id = order.Id,
+                    ClientId = order.ClientId,
+                    JewelId = order.JewelId,
+                    ImplementerId = model.ImplementerId,
+                    Count = order.Count,
+                    Sum = order.Sum,
+                    DateCreate = order.DateCreate
+                };
+
+                if (_warehouseStorage.CheckAndWriteOff(jewel.JewelComponents, tempOrder.Count))
+                {
+                    tempOrder.Status = OrderStatus.Выполняется;
+                    tempOrder.DateImplement = DateTime.Now;
+                    _orderStorage.Update(tempOrder);
+                }
+                else
+                {
+                    tempOrder.Status = OrderStatus.ТребуютсяМатериалы;
+                    _orderStorage.Update(tempOrder);
                 }
             }
-            catch
-            {
-                orderBM.Status = OrderStatus.ТребуютсяМатериалы;
-                _orderStorage.Update(orderBM);
-            }        
         }
 
         public void FinishOrder(ChangeStatusBindingModel model)
