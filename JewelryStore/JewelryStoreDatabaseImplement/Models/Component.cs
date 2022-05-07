@@ -15,5 +15,8 @@ namespace JewelryStoreDatabaseImplement.Models
 
         [ForeignKey("ComponentId")]
         public virtual List<JewelComponent> JewelComponents { get; set; }
+
+        [ForeignKey("ComponentId")]
+        public virtual List<WarehouseComponent> WarehouseComponents { get; set; }
     }
 }

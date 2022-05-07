@@ -12,12 +12,17 @@ namespace JewelryStoreBusinessLogic.BusinessLogics
     public class OrderLogic : IOrderLogic
     {
         private readonly IOrderStorage _orderStorage;
+        private readonly IJewelStorage _jewelStorage;
+        private readonly IWarehouseStorage _warehouseStorage;
+        private readonly object locker = new object();
         private readonly IClientStorage _clientStorage;
         private readonly AbstractMailWorker _mailWorker;
 
-        public OrderLogic(IOrderStorage orderStorage, IClientStorage clientStorage, AbstractMailWorker mailWorker)
+        public OrderLogic(IOrderStorage orderStorage, IJewelStorage jewelStorage, IWarehouseStorage warehouseStorage, IClientStorage clientStorage, AbstractMailWorker mailWorker)
         {
             _orderStorage = orderStorage;
+            _jewelStorage = jewelStorage;
+            _warehouseStorage = warehouseStorage;
             _clientStorage = clientStorage;
             _mailWorker = mailWorker;
         }
@@ -57,34 +62,49 @@ namespace JewelryStoreBusinessLogic.BusinessLogics
 
         public void TakeOrderInWork(ChangeStatusBindingModel model)
         {
-            var order = _orderStorage.GetElement(new OrderBindingModel { Id = model.OrderId });
-            if (order == null)
+            lock (locker)
             {
-                throw new Exception("Не найден заказ");
-            }
-            if (order.Status != OrderStatus.Принят)
-            {
-                throw new Exception("Заказ не в статусе \"Принят\"");
-            }
-            _orderStorage.Update(new OrderBindingModel
-            {
-                Id = order.Id,
-                ClientId = order.ClientId,
-                JewelId = order.JewelId,
-                ImplementerId = model.ImplementerId,
-                Count = order.Count,
-                Sum = order.Sum,
-                DateCreate = order.DateCreate,
-                DateImplement = DateTime.Now,
-                Status = OrderStatus.Выполняется
-            });
+                var order = _orderStorage.GetElement(new OrderBindingModel { Id = model.OrderId });
+                if (order == null)
+                {
+                    throw new Exception("Не найден заказ");
+                }
+                if (order.Status != OrderStatus.Принят && order.Status != OrderStatus.ТребуютсяМатериалы)
+                {
+                    throw new Exception("Заказ не в статусе \"Принят\" или \"Требуются материалы\"");
+                }
 
-            _mailWorker.MailSendAsync(new MailSendInfoBindingModel
-            {
-                MailAddress = _clientStorage.GetElement(new ClientBindingModel { Id = order.ClientId })?.Login,
-                Subject = $"Смена статуса заказа № {order.Id}",
-                Text = $"Статус заказа изменен на: {OrderStatus.Выполняется}"
-            });
+                var jewel = _jewelStorage.GetElement(new JewelBindingModel { Id = order.JewelId });
+                var tempOrder = new OrderBindingModel
+                {
+                    Id = order.Id,
+                    ClientId = order.ClientId,
+                    JewelId = order.JewelId,
+                    ImplementerId = model.ImplementerId,
+                    Count = order.Count,
+                    Sum = order.Sum,
+                    DateCreate = order.DateCreate
+                };
+
+                if (_warehouseStorage.CheckAndWriteOff(jewel.JewelComponents, tempOrder.Count))
+                {
+                    tempOrder.Status = OrderStatus.Выполняется;
+                    tempOrder.DateImplement = DateTime.Now;
+                    _orderStorage.Update(tempOrder);
+
+                    _mailWorker.MailSendAsync(new MailSendInfoBindingModel
+                    {
+                        MailAddress = _clientStorage.GetElement(new ClientBindingModel { Id = order.ClientId })?.Login,
+                        Subject = $"Смена статуса заказа № {order.Id}",
+                        Text = $"Статус заказа изменен на: {OrderStatus.Выполняется}"
+                    });
+                }
+                else
+                {
+                    tempOrder.Status = OrderStatus.ТребуютсяМатериалы;
+                    _orderStorage.Update(tempOrder);
+                }
+            }
         }
 
         public void FinishOrder(ChangeStatusBindingModel model)
