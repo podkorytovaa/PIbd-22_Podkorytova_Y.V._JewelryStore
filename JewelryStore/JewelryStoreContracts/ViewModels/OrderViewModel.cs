@@ -1,5 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
+using JewelryStoreContracts.Attributes;
 using JewelryStoreContracts.Enums;
 
 namespace JewelryStoreContracts.ViewModels
@@ -7,36 +7,37 @@ namespace JewelryStoreContracts.ViewModels
     // Заказ
     public class OrderViewModel
     {
+        [Column(title: "Номер", width: 60)]
         public int Id { get; set; }
 
         public int ClientId { get; set; }
 
-        [DisplayName("ФИО клиента")]
+        [Column(title: "Клиент", width: 260)]
         public string ClientFIO { get; set; }
 
         public int JewelId { get; set; }
 
-        [DisplayName("Драгоценность")]
+        [Column(title: "Драгоценность", gridViewAutoSize: GridViewAutoSize.Fill)]
         public string JewelName { get; set; }
 
         public int? ImplementerId { get; set; }
 
-        [DisplayName("ФИО исполнителя")]
+        [Column(title: "Исполнитель", width: 210)]
         public string ImplementerFIO { get; set; }
 
-        [DisplayName("Количество")]
+        [Column(title: "Количество", width: 100)]
         public int Count { get; set; }
 
-        [DisplayName("Сумма")]
+        [Column(title: "Сумма", width: 90)]
         public decimal Sum { get; set; }
 
-        [DisplayName("Статус")]
+        [Column(title: "Статус", width: 100)]
         public OrderStatus Status { get; set; }
 
-        [DisplayName("Дата создания")]
+        [Column(title: "Дата создания", width: 140)]
         public DateTime DateCreate { get; set; }
 
-        [DisplayName("Дата выполнения")]
+        [Column(title: "Дата выполнения", width: 140)]
         public DateTime? DateImplement { get; set; }
     }
 }

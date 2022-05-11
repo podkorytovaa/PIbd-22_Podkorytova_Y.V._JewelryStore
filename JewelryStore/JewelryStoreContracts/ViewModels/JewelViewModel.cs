@@ -1,17 +1,18 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using JewelryStoreContracts.Attributes;
+using System.Collections.Generic;
 
 namespace JewelryStoreContracts.ViewModels
 {
     // Изделие (драгоценность), изготавливаемое в магазине
     public class JewelViewModel
     {
+        [Column(title: "Номер", width: 60)]
         public int Id { get; set; }
 
-        [DisplayName("Название драгоценности")]
+        [Column(title: "Драгоценность", gridViewAutoSize: GridViewAutoSize.Fill)]
         public string JewelName { get; set; }
 
-        [DisplayName("Цена")]
+        [Column(title: "Цена", width: 120)]
         public decimal Price { get; set; }
 
         public Dictionary<int, (string, int)> JewelComponents { get; set; }

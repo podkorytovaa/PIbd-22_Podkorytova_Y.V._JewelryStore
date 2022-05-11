@@ -1,5 +1,5 @@
-﻿using System;
-using System.ComponentModel;
+﻿using JewelryStoreContracts.Attributes;
+using System;
 
 
 namespace JewelryStoreContracts.ViewModels
@@ -9,16 +9,16 @@ namespace JewelryStoreContracts.ViewModels
     {
         public string MessageId { get; set; }
 
-        [DisplayName("Отправитель")]
+        [Column(title: "Отправитель", width: 250)]
         public string SenderName { get; set; }
 
-        [DisplayName("Дата письма")]
+        [Column(title: "Дата письма", width: 140)]
         public DateTime DateDelivery { get; set; }
 
-        [DisplayName("Заголовок")]
+        [Column(title: "Заголовок", width: 250)]
         public string Subject { get; set; }
 
-        [DisplayName("Текст")]
+        [Column(title: "Текст", gridViewAutoSize: GridViewAutoSize.Fill)]
         public string Body { get; set; }
     }
 }
