@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace JewelryStoreFileImplement.Implements
 {
-    public class MessageInfoStorage /*: IMessageInfoStorage*/
+    public class MessageInfoStorage : IMessageInfoStorage
     {
         private readonly FileDataListSingleton source;
 
@@ -20,14 +20,7 @@ namespace JewelryStoreFileImplement.Implements
         public List<MessageInfoViewModel> GetFullList()
         {
             return source.MessagesInfo
-                .Select(rec => new MessageInfoViewModel
-                {
-                    MessageId = rec.MessageId,
-                    SenderName = rec.SenderName,
-                    DateDelivery = rec.DateDelivery,
-                    Subject = rec.Subject,
-                    Body = rec.Body
-                })
+                .Select(CreateModel)
                 .ToList();
         }
 
@@ -37,16 +30,30 @@ namespace JewelryStoreFileImplement.Implements
             {
                 return null;
             }
+            if (model.ToSkip.HasValue && model.ToTake.HasValue && !model.ClientId.HasValue)
+            {
+                return source.MessagesInfo
+                    .Skip((int)model.ToSkip)
+                    .Take((int)model.ToTake)
+                    .Select(CreateModel)
+                    .ToList();
+            }
             return source.MessagesInfo.Where(rec => (model.ClientId.HasValue && rec.ClientId == model.ClientId) || (!model.ClientId.HasValue && rec.DateDelivery.Date == model.DateDelivery.Date))
-                .Select(rec => new MessageInfoViewModel
-                {
-                    MessageId = rec.MessageId,
-                    SenderName = rec.SenderName,
-                    DateDelivery = rec.DateDelivery,
-                    Subject = rec.Subject,
-                    Body = rec.Body
-                })
+                .Skip(model.ToSkip ?? 0)
+                .Take(model.ToTake ?? source.MessagesInfo.Count())
+                .Select(CreateModel)
                 .ToList();
+        }
+
+        public MessageInfoViewModel GetElement(MessageInfoBindingModel model)
+        {
+            if (model == null)
+            {
+                return null;
+            }
+
+            var message = source.MessagesInfo.FirstOrDefault(rec => rec.MessageId == model.MessageId);
+            return message != null ? CreateModel(message) : null;
         }
 
         public void Insert(MessageInfoBindingModel model)
@@ -56,15 +63,44 @@ namespace JewelryStoreFileImplement.Implements
             {
                 throw new Exception("Уже есть письмо с таким идентификатором");
             }
-            source.MessagesInfo.Add(new MessageInfo
+            source.MessagesInfo.Add(CreateModel(model, new MessageInfo()));
+        }
+
+        public void Update(MessageInfoBindingModel model)
+        {
+            MessageInfo element = source.MessagesInfo.FirstOrDefault(rec => rec.MessageId == model.MessageId);
+            if (element == null)
+            {
+                throw new Exception("Элемент не найден");
+            }
+            CreateModel(model, element);
+        }
+
+        private MessageInfoViewModel CreateModel(MessageInfo model)
+        {
+            return new MessageInfoViewModel
             {
                 MessageId = model.MessageId,
-                ClientId = model.ClientId,
-                SenderName = model.FromMailAddress,
+                SenderName = model.SenderName,
                 DateDelivery = model.DateDelivery,
                 Subject = model.Subject,
-                Body = model.Body
-            });
+                Body = model.Body,
+                Checked = model.Checked,
+                ReplyText = model.ReplyText
+            };
+        }
+
+        private static MessageInfo CreateModel(MessageInfoBindingModel model, MessageInfo message)
+        {
+            message.MessageId = model.MessageId;
+            message.ClientId = model.ClientId;
+            message.SenderName = model.FromMailAddress;
+            message.DateDelivery = model.DateDelivery;
+            message.Subject = model.Subject;
+            message.Body = model.Body;
+            message.Checked = model.Checked;
+            message.ReplyText = model.ReplyText;
+            return message;
         }
     }
 }

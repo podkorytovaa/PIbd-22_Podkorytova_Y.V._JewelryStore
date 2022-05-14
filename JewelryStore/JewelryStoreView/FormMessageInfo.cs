@@ -37,7 +37,6 @@ namespace JewelryStoreView
                         {
                             _messageLogic.CreateOrUpdate(new MessageInfoBindingModel
                             {
-                                //ClientId = _clientLogic.Read(new ClientBindingModel { Login = mes.SenderName })?[0].Id,
                                 MessageId = messageId,
                                 FromMailAddress = mes.SenderName,
                                 Subject = mes.Subject,
@@ -47,10 +46,10 @@ namespace JewelryStoreView
                                 ReplyText = mes.ReplyText
                             });
                         }
-                        labelSenderName.Text = /*"Отправитель: " + */mes.SenderName;
-                        labelDateDelivery.Text = /*"Дата письма: " + */mes.DateDelivery.ToString();
-                        labelSubject.Text = /*"Заголовок: " +*/ mes.Subject;
-                        labelBody.Text = /*"Текст: " +*/ mes.Body;
+                        labelSenderName.Text = mes.SenderName;
+                        labelDateDelivery.Text = mes.DateDelivery.ToString();
+                        labelSubject.Text = mes.Subject;
+                        labelBody.Text = mes.Body;
                         textBoxReplyText.Text = mes.ReplyText;
                         if (!string.IsNullOrEmpty(mes.ReplyText))
                         {
@@ -92,7 +91,6 @@ namespace JewelryStoreView
                     Subject = "Ответ: " + labelSubject.Text,
                     Text = textBoxReplyText.Text
                 });
-
                 
                 MessageBox.Show("Ответ отправлен", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 DialogResult = DialogResult.OK;

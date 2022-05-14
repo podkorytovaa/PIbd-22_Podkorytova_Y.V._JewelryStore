@@ -203,7 +203,7 @@ namespace JewelryStoreFileImplement
             if (File.Exists(MessageInfoFileName))
             {
                 var xDocument = XDocument.Load(MessageInfoFileName);
-                var xElements = xDocument.Root.Elements("Message").ToList();
+                var xElements = xDocument.Root.Elements("MessageInfo").ToList();
                 int? clientId;
                 foreach (var elem in xElements)
                 {
@@ -219,7 +219,9 @@ namespace JewelryStoreFileImplement
                         SenderName = elem.Element("SenderName").Value,
                         DateDelivery = DateTime.Parse(elem.Element("DateDelivery").Value),
                         Subject = elem.Element("Subject").Value,
-                        Body = elem.Element("Body").Value
+                        Body = elem.Element("Body").Value,
+                        Checked = Convert.ToBoolean(elem.Element("Checked").Value),
+                        ReplyText = elem.Element("ReplyText").Value
                     });
                 }
             }
@@ -365,10 +367,12 @@ namespace JewelryStoreFileImplement
                         new XElement("SenderName", messageInfo.SenderName),
                         new XElement("Subject", messageInfo.Subject),
                         new XElement("Body", messageInfo.Body),
-                        new XElement("DateDelivery", messageInfo.DateDelivery)));
+                        new XElement("DateDelivery", messageInfo.DateDelivery),
+                        new XElement("Checked", messageInfo.Checked),
+                        new XElement("ReplyText", messageInfo.ReplyText)));
                 }
                 var xDocument = new XDocument(xElement);
-                xDocument.Save(OrderFileName);
+                xDocument.Save(MessageInfoFileName);
             }
         }
     }
