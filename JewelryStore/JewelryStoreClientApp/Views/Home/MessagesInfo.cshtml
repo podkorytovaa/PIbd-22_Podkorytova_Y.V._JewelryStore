@@ -55,17 +55,17 @@
             </tbody>
         </table>
     }
-    <div style="display: flex; justify-content: space-between; max-width: 120px;">
-        @{ 
+    <div style="display: flex; justify-content: space-around;">
+        @{
             if ((Model.page - 1) >= 1)
             {
                 <a asp-action="MessagesInfo" asp-route-page="@(Model.page-1)">Предыдущая - @(Model.page-1)</a> 
             }
-            <span style="font-weight: bold;">@(Model.page)</span> 
+            <span>Страница @(Model.page)</span> 
             if (Model.isNext)
             {
                 <a asp-action="MessagesInfo" asp-route-page="@(Model.page+1)">Следующая - @(Model.page+1)</a> 
-            } 
+            }
         }
     </div>
 </div>

@@ -13,7 +13,7 @@ namespace JewelryStoreRestApi.Controllers
     {
         private readonly IClientLogic _clientLogic;
         private readonly IMessageInfoLogic _messageLogic;
-        private readonly int messagesOnPage = 1;
+        private readonly int messagesOnPage = 3;
 
         public ClientController(IClientLogic clientLogic, IMessageInfoLogic messageLogic)
         {

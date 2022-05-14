@@ -1,6 +1,7 @@
 ﻿using JewelryStoreBusinessLogic.MailWorker;
 using JewelryStoreContracts.BindingModels;
 using JewelryStoreContracts.BusinessLogicsContracts;
+using JewelryStoreContracts.StoragesContracts;
 using JewelryStoreContracts.ViewModels;
 using System;
 using System.Windows.Forms;
@@ -10,16 +11,16 @@ namespace JewelryStoreView
     public partial class FormMessageInfo : Form
     {
         private readonly IMessageInfoLogic _messageLogic;
-        private readonly IClientLogic _clientLogic;
+        private readonly IClientStorage _clientStorage;
         private readonly AbstractMailWorker _mailWorker;
         private string messageId;
         public string MessageId { set { messageId = value; } }
 
-        public FormMessageInfo(IMessageInfoLogic messageLogic, IClientLogic clientLogic, AbstractMailWorker mailWorker)
+        public FormMessageInfo(IMessageInfoLogic messageLogic, IClientStorage clientStorage, AbstractMailWorker mailWorker)
         {
             InitializeComponent();
             _messageLogic = messageLogic;
-            _clientLogic = clientLogic;
+            _clientStorage = clientStorage;
             _mailWorker = mailWorker;
         }
 
@@ -46,10 +47,10 @@ namespace JewelryStoreView
                                 ReplyText = mes.ReplyText
                             });
                         }
-                        labelSenderName.Text = "Отправитель: " + mes.SenderName;
-                        labelDateDelivery.Text = "Дата письма: " + mes.DateDelivery.ToString();
-                        labelSubject.Text = "Заголовок: " + mes.Subject;
-                        labelBody.Text = "Текст: " + mes.Body;
+                        labelSenderName.Text = /*"Отправитель: " + */mes.SenderName;
+                        labelDateDelivery.Text = /*"Дата письма: " + */mes.DateDelivery.ToString();
+                        labelSubject.Text = /*"Заголовок: " +*/ mes.Subject;
+                        labelBody.Text = /*"Текст: " +*/ mes.Body;
                         textBoxReplyText.Text = mes.ReplyText;
                         if (!string.IsNullOrEmpty(mes.ReplyText))
                         {
@@ -73,16 +74,9 @@ namespace JewelryStoreView
             }
             try
             {
-                _mailWorker.MailSendAsync(new MailSendInfoBindingModel
-                {
-                    MailAddress = labelSenderName.Text,
-                    Subject = "Ответ: " + labelSubject.Text,
-                    Text = textBoxReplyText.Text
-                });
-
                 _messageLogic.CreateOrUpdate(new MessageInfoBindingModel
                 {
-                    ClientId = _clientLogic.Read(new ClientBindingModel { Login = labelSenderName.Text })?[0].Id,
+                    ClientId = _clientStorage.GetElement(new ClientBindingModel { Login = labelSenderName.Text })?.Id,
                     MessageId = messageId,
                     FromMailAddress = labelSenderName.Text,
                     Subject = labelSubject.Text,
@@ -91,6 +85,15 @@ namespace JewelryStoreView
                     Checked = true,
                     ReplyText = textBoxReplyText.Text
                 });
+
+                _mailWorker.MailSendAsync(new MailSendInfoBindingModel
+                {
+                    MailAddress = labelSenderName.Text,
+                    Subject = "Ответ: " + labelSubject.Text,
+                    Text = textBoxReplyText.Text
+                });
+
+                
                 MessageBox.Show("Ответ отправлен", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 DialogResult = DialogResult.OK;
                 Close();
