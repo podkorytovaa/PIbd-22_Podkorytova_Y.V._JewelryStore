@@ -11,5 +11,9 @@ namespace JewelryStoreContracts.BindingModels
         public string Subject { get; set; }
         public string Body { get; set; }
         public DateTime DateDelivery { get; set; }
+        public bool Checked { get; set; }
+        public string ReplyText { get; set; }
+        public int? ToSkip { get; set; }
+        public int? ToTake { get; set; }
     }
 }

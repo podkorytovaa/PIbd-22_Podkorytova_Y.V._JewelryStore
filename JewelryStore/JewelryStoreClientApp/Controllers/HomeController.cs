@@ -145,13 +145,15 @@ namespace JewelryStoreClientApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult MessagesInfo()
+        public IActionResult MessagesInfo(int page = 1)
         {
             if (Program.Client == null)
             {
                 return Redirect("~/Home/Enter");
             }
-            return View(APIClient.GetRequest<List<MessageInfoViewModel>> ($"api/client/GetMessagesInfo?clientId={Program.Client.Id}"));
+            var elem = APIClient.GetRequest<(List<MessageInfoViewModel> list, bool isNext)> ($"api/client/GetMessagesInfo?clientId={Program.Client.Id}&page={page}");
+            (List<MessageInfoViewModel>, bool, int) model = (elem.list, elem.isNext, page);
+            return View(model);
         }
     }
 }

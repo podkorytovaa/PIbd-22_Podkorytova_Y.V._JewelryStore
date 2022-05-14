@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace JewelryStoreFileImplement.Implements
 {
-    public class MessageInfoStorage : IMessageInfoStorage
+    public class MessageInfoStorage /*: IMessageInfoStorage*/
     {
         private readonly FileDataListSingleton source;
 

@@ -21,12 +21,24 @@ namespace JewelryStoreBusinessLogic.BusinessLogics
             {
                 return _messageInfoStorage.GetFullList();
             }
+            if (!string.IsNullOrEmpty(model.MessageId))
+            {
+                return new List<MessageInfoViewModel> { _messageInfoStorage.GetElement(model) };
+            }
             return _messageInfoStorage.GetFilteredList(model);
         }
 
         public void CreateOrUpdate(MessageInfoBindingModel model)
         {
-            _messageInfoStorage.Insert(model);
+            var element = _messageInfoStorage.GetElement(new MessageInfoBindingModel { MessageId = model.MessageId });
+            if (element != null)
+            {
+                _messageInfoStorage.Update(model);
+            }
+            else
+            {
+                _messageInfoStorage.Insert(model);
+            }
         }
     }
 }

@@ -20,5 +20,11 @@ namespace JewelryStoreContracts.ViewModels
 
         [DisplayName("Текст")]
         public string Body { get; set; }
+
+        [DisplayName("Прочитано")]
+        public bool Checked { get; set; }
+
+        [DisplayName("Ответ")]
+        public string ReplyText { get; set; }
     }
 }

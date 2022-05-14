@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace JewelryStoreListImplement.Implements
 {
-    public class MessageInfoStorage : IMessageInfoStorage
+    public class MessageInfoStorage /*: IMessageInfoStorage*/
     {
         private readonly DataListSingleton source;
 
